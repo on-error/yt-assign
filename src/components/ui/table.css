@@ -1,0 +1,35 @@
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-border);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.table th,
+.table td {
+  padding: 0.6rem 0.75rem;
+  text-align: left;
+}
+
+.table thead {
+  background: color-mix(in srgb, var(--color-elevated) 90%, #020617);
+}
+
+.table tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--color-elevated) 96%, #020617);
+}
+
+.table tbody tr:nth-child(odd) {
+  background: var(--color-elevated);
+}
+
+.table tbody tr:hover {
+  background: color-mix(in srgb, var(--color-primary-soft) 70%, var(--color-elevated));
+}
+
+
