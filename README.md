@@ -1,73 +1,100 @@
-# React + TypeScript + Vite
+## User Management + Analytics Dashboard
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Mini admin dashboard built with **React + TypeScript + Vite**.
 
-Currently, two official plugins are available:
+It includes:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Users list with filters, sorting and pagination
+- User details with editable profile information
+- Analytics overview with simple charts
+- Light / dark theme toggle
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## How to run the project
 
-## Expanding the ESLint configuration
+### Prerequisites
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Node.js 18+ and npm installed
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Local setup
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+```bash
+# Install dependencies
+npm install
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Start dev server (http://localhost:5173)
+npm run dev
+
+# Run type-check + production build
+npm run build
+
+# Preview production build
+npm run preview
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Main libraries used
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- **React 19 + TypeScript** – UI and type safety
+- **Vite** – build tool and dev server
+- **React Router DOM** – routing between `/users`, `/users/:id`, `/analytics`
+- **Zustand** – global state management for user filters, user list, and theme
+- **Recharts** – charts on the Analytics page
+- **ESLint** – linting via the default Vite React + TS setup
+
+---
+
+## Architecture overview
+
+### High-level structure
+
+- `src/main.tsx` – React entry point, wraps the app with `BrowserRouter`.
+- `src/App.tsx` – defines routes and nests everything under the shared `AppLayout`.
+- `src/components/` – reusable UI primitives and layout:
+  - `components/layout/AppLayout.tsx` – top navigation, theme toggle, shared shell.
+  - `components/ui/*` – small building blocks: `Button`, `Card`, `Table`, `Pagination`, `Input`, `Select`, `Badge`, `Modal`.
+- `src/routes/` – feature-level pages:
+  - `UsersPage.tsx` – table of users with search, status filter, sorting and pagination.
+  - `UserDetailsPage.tsx` – profile card, activity summary, last actions, and edit modal.
+  - `AnalyticsPage.tsx` – signup trend line chart and active vs inactive donut chart.
+- `src/data/users.ts` – static JSON-like array of user objects (no external API).
+- `src/store/` – global state:
+  - `usersStore.ts` – holds users list and filters (search, status, sort, pagination) + `updateUser` for local edits.
+  - `uiStore.ts` – UI-level state such as `darkMode`.
+
+### State management choices
+
+- **Zustand** is used instead of Redux/Context because it keeps the store small and ergonomic:
+  - Users list and filters are global so they are shared between list and details pages.
+  - Updating a user in the details modal immediately reflects in the list.
+  - Theme state is global so the layout can toggle light/dark mode from anywhere.
+
+### UI & theming
+
+- Light and dark themes are implemented with **CSS custom properties**:
+  - `.app` defines the light palette (backgrounds, borders, text, primary color).
+  - `.app.app-dark` overrides those variables for the dark palette.
+  - UI components consume only these tokens (`--color-bg`, `--color-elevated`, `--color-border`, etc.), so they automatically adapt to the current theme.
+- Layout is responsive with fluid widths and scroll-friendly cards/tables.
+
+---
+
+## Screenshots
+
+Screenshots are optional but recommended.  
+You can add them to this section, for example:
+
+- Users list (light mode)
+- Users list (dark mode)
+- User details with edit modal
+- Analytics overview with charts
+
+Place image files in the `public/` folder or reference external image URLs in markdown:
+
+```md
+![Users dashboard](public/screenshots/users-light.png)
 ```
+
+
